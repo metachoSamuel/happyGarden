@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const ENGINE_DB = process.env.ENGINE_DB;
 
-if (ENGINE_DB === 'mysql') {connectDatabase()}
+connectDatabase()
 
 app.listen(port, () => {
     logger.info(`Server on http://localhost:${port}`);
