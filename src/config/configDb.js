@@ -3,13 +3,13 @@
  * @author metachoSamuel
  */
 
-const { Sequelize } = require('sequelize');
 const logger = require('../utils/logger');
+const { Sequelize } = require('sequelize');
 
-const database = process.env.MYSQL_DATABASE
-const username = process.env.MYSQL_USER
-const password = process.env.MYSQL_PASSWORD
-const host = process.env.MYSQL_HOST
+const database = process.env.MYSQL_DATABASE;
+const username = process.env.MYSQL_USER;
+const password = process.env.MYSQL_PASSWORD;
+const host = process.env.MYSQL_HOST;
 
 const sequelize = new Sequelize(database, username, password, {
     host,
@@ -18,11 +18,15 @@ const sequelize = new Sequelize(database, username, password, {
 
 const connectDatabase = async () => {
     try {
-        await sequelize.authenticate()
+        await sequelize.authenticate();
         logger.info('Database connected');
     } catch (error) {
         logger.error(`> MySQL error de conexión: ${error}`);
     }
 };
 
-module.exports = { sequelize, connectDatabase }
+// Exporta sequelize como un objeto y connectDatabase como una función
+module.exports = {
+    sequelize,
+    connectDatabase
+};

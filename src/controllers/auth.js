@@ -5,7 +5,7 @@
 
 const { matchedData } = require('express-validator');
 const { encrypt, compare } = require('../utils/handlePassword');
-const { userModel } = require('../models/user');
+const { usersModel } = require('../models');
 const { tokenSign } = require('../utils/handleJwt');
 const { handleHttpError } = require('../utils/handleError');
 const logger= require("../utils/logger");
@@ -13,7 +13,7 @@ const logger= require("../utils/logger");
 const register = async (req, res) => {
     try {
         const { password, ...rest } = matchedData(req);
-        const user = await userModel.create({
+        const user = await usersModel.create({
             ...rest,
             password: await encrypt(password)
         });
@@ -31,8 +31,8 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { password, email } = matchedData(req);
-        const user = await userModel.findOne({ where: { email } });
+        const { password, user_name } = matchedData(req);
+        const user = await usersModel.findOne({ where: { user_name } });
         if (!user) return handleHttpError(res, 'Correo o contraseña incorrectos', 401);
 
         const check = await compare(password, user.password);

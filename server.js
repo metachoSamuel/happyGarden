@@ -27,6 +27,9 @@ const ENGINE_DB = process.env.ENGINE_DB;
 
 connectDatabase()
 
+app.use('/api', require('./src/routes'))
+console.clear()
+
 app.listen(port, () => {
     logger.info(`Server on http://localhost:${port}`);
 });
