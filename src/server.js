@@ -7,6 +7,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const logger = require('./utils/logger');
+const config = require('./config/configDb');
 
 const app = express();
 const PORT = 3000;
@@ -15,10 +17,12 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 
+config.connectDatabase();
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.listen(PORT, () => {
-    console.log(`Server on http://localhost:${PORT}`);
+    logger.info(`Server on http://localhost:${PORT}`);
 });

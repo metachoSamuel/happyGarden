@@ -4,12 +4,13 @@
  */
 
 const mysql = require('mysql');
+const logger = require('../utils/logger');
 const settings = {
     host: "localhost",
     port: "3306",
     user: "root",
     password: "",
-    database: "happyGarden"
+    database: "happygarden"
 };
 let connection;
 
@@ -18,9 +19,9 @@ function connectDatabase() {
         connection = mysql.createConnection(settings);
         connection.connect((err) => {
             if(!err) {
-                console.log('Database connected', settings.database);
+                logger.info('Database connected', settings.database);
             } else {
-                console.log('database connection error')
+                logger.error('database connection error');
             }
         });
     }
@@ -31,9 +32,9 @@ function disconnectDatabase() {
     if(connection) {
         connection.end((err) => {
             if (err) {
-                console.log('Error', err);
+                logger.error('Error', err);
             } else {
-                console.log('Database disconnected');
+                logger.info('Database disconnected');
             }
         });
     }
