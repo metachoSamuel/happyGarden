@@ -3,44 +3,26 @@
  * @author metachoSamuel
  */
 
-const mysql = require('mysql');
+const { Sequelize } = require('sequelize');
 const logger = require('../utils/logger');
-const settings = {
-    host: "localhost",
-    port: "3306",
-    user: "root",
-    password: "",
-    database: "happygarden"
+
+const database = process.env.MYSQL_DATABASE
+const username = process.env.MYSQL_USER
+const password = process.env.MYSQL_PASSWORD
+const host = process.env.MYSQL_HOST
+
+const sequelize = new Sequelize(database, username, password, {
+    host,
+    dialect: 'mysql'
+});
+
+const connectDatabase = async () => {
+    try {
+        await sequelize.authenticate()
+        logger.info('Database connected');
+    } catch (error) {
+        logger.error(`> MySQL error de conexión: ${error}`);
+    }
 };
-let connection;
 
-function connectDatabase() {
-    if(!connection) {
-        connection = mysql.createConnection(settings);
-        connection.connect((err) => {
-            if(!err) {
-                logger.info('Database connected', settings.database);
-            } else {
-                logger.error('database connection error');
-            }
-        });
-    }
-    return connection;
-}
-
-function disconnectDatabase() {
-    if(connection) {
-        connection.end((err) => {
-            if (err) {
-                logger.error('Error', err);
-            } else {
-                logger.info('Database disconnected');
-            }
-        });
-    }
-}
-
-module.exports = {
-    connectDatabase,
-    disconnectDatabase
-}
+module.exports = { sequelize, connectDatabase }
