@@ -32,7 +32,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { password, email } = matchedData(req);
-        const user = await usersModel.findOne({ where: { email } });
+        const user = await userModel.findOne({ where: { email } });
         if (!user) return handleHttpError(res, 'Correo o contraseña incorrectos', 401);
 
         const check = await compare(password, user.password);
