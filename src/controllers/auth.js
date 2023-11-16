@@ -22,7 +22,10 @@ const register = async (req, res) => {
             token: await tokenSign(user),
             user
         }
-        return res.send({ data });
+        return res.header('authorization', data).json({
+            message: "Usuario autenticado",
+            token: data
+        })
     } catch (error) {
         logger.error(error);
         return handleHttpError(res, 'Error en auth/register', 500);
@@ -41,10 +44,13 @@ const login = async (req, res) => {
         user.set('password', undefined, { strict: false });
 
         const data = {
-            toke: await tokenSign(user),
+            token: await tokenSign(user),
             user
         };
-        return res.send({ data });
+        return res.header('authorization', data).json({
+            message: "Usuario autenticado",
+            token: data
+        })
     } catch (error) {
         logger.error(error);
         return handleHttpError(res, 'Error en auth/login', 500);

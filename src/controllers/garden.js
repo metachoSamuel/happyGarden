@@ -17,7 +17,8 @@ const PUBLIC_URL = process.env.PUBLIC_URL;
  */
 const getGardens = async (req, res) => {
     try {
-        const data = await gardensModel.findAll();
+        const user_id = req.user.id_user;
+        const data = await gardensModel.findAll( {where: { user_id: user_id}});
         return res.send({ data });
     } catch (error) {
         logger.error(error);
@@ -49,7 +50,7 @@ const getGarden = async (req, res) => {
 const createGarden = async (req, res) => {
     try {
         const body = matchedData(req);
-        const user_id = req.user.id;
+        const user_id = req.user.id_user;
 
         const data = await gardensModel.create({
             type: body.type,
@@ -102,10 +103,10 @@ const deleteGarden = async (req, res) => {
     try {
         const { id } = matchedData(req);
 
-        const user_id = findUser(req, res);
+        const user_id = req.user.id_user;
         const data = await gardensModel.findByPk(id);
 
-        if (!data || data.user_id !== user_id) {
+        if (!data || data.dataValues.user_id !== user_id) {
             return handleHttpError(res, 'Jardín no encontrado o no pertenece al usuario', 404);
         }
         await data.destroy();

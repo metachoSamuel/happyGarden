@@ -23,7 +23,6 @@ const Garden = sequelize.define('gardens', {
     user_id: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
     }
 }, {
     timestamps: false
