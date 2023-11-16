@@ -4,6 +4,7 @@ const pathModels = './models';
 
 const models = {
     usersModel: require('./user'),
+    gardensModel: require('./garden'),
 }
 
 
