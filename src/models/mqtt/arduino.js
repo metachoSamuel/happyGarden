@@ -18,9 +18,8 @@ const Arduino = sequelize.define('arduinos', {
         allowNull: false
     },
     garden_id: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     timestamps: true
@@ -42,7 +41,7 @@ const Ard_temp = sequelize.define('ard_temps', {
         allowNull: true,
         references: {
             model: Arduino,
-            key: 'id'
+            key: 'id_arduino'
         }
     }
 }, {

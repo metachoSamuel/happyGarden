@@ -6,12 +6,12 @@
 const mqtt = require('mqtt');
 const logger = require('../../utils/logger');
 const moment = require("moment");
-const { arduinoModel, ardTempModel } = require('../../models/mqtt/arduino');
+const { Arduino, Ard_temp } = require('../../models/mqtt/arduino');
 
 const fechaCol = moment().utc().tz('America/Bogota');
 const portMosca = process.env.PORT_MOSCA || 4000;
-const subscriber = mqtt.connect(`mqtt://localhost:${portMosca}`);
 
+let subscriber;
 
 
 /**
@@ -20,10 +20,12 @@ const subscriber = mqtt.connect(`mqtt://localhost:${portMosca}`);
 
 const startSubscriber = () => {
     try {
+        subscriber = mqtt.connect(`mqtt://localhost:${portMosca}`);
         subscriber.on('connect', () => {
             logger.info("Subscriber MQTT connected");
             subscriber.subscribe('Topic test');
         });
+        createArduinoRegister();
     } catch (error) {
         logger.error(error);
     }
@@ -34,14 +36,14 @@ const createArduinoRegister = () => {
         subscriber.on('message', (topic, message) => {
             logger.info(message.toString());
             const dataToInsert = message.toString().split(' ');
-            arduinoModel.create({
-                descripcion: dataToInsert[0],
+            Arduino.create({
+                description: dataToInsert[0],
                 timestamp: fechaCol.format(),
                 garden_id: dataToInsert[2]
             }).then(arduinoRecord => {
-                return ardTempModel.create({
-                    temperatura: dataToInsert[1],
-                    arduino_id: arduinoRecord.id
+                return Ard_temp.create({
+                    temperature: dataToInsert[1],
+                    arduino_id: arduinoRecord.id_arduino
                 });
             }).then(() => {
                 logger.info('Registros creados con éxito.');

@@ -27,7 +27,9 @@ const ENGINE_DB = process.env.ENGINE_DB;
 
 connectDatabase()
 
-app.use('/api', require('./src/routes'))
+app.use('/api', require('./src/routes/auth'))
+app.use('/api/garden', require('./src/routes/garden'))
+app.use('/mqtt', require('./src/routes/mqtt'));
 console.clear()
 
 app.listen(port, () => {

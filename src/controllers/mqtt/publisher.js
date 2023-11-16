@@ -8,14 +8,14 @@ const { SerialPort } = require('serialport');
 const { ReadlineParser } = require('@serialport/parser-readline');
 const logger = require('../../utils/logger');
 
-const path = process.env.SERIAL_PORT || 0;
-const baudRate = process.env.BAUD_RATE || 0;
+//const path = process.env.SERIAL_PORT || 0;
+//const baudRate = parseInt(process.env.BAUD_RATE, 10) || 9600;
 const portMosca = process.env.PORT_MOSCA || 4000;
 
-const port = new SerialPort({path: path, baudRate: baudRate});
-const parser = port.pipe(new ReadlineParser());
+//const port = new SerialPort({path: path, baudRate: baudRate});
+//const parser = port.pipe(new ReadlineParser());
 
-const publisher = mqtt.connect(`mqtt://localhost:${portMosca}`);
+let publisher;
 
 
 /**
@@ -24,13 +24,14 @@ const publisher = mqtt.connect(`mqtt://localhost:${portMosca}`);
 
 const startPublisher = () => {
     try {
+        publisher = mqtt.connect(`mqtt://localhost:${portMosca}`);
         publisher.on('connect', () => {
-            parser.on('data', (data) => {
-                setInterval(()=>{
-                    publisher.publish('Topic test', data);
-                }, 5000);
-            });
+            setInterval(() => {
+                const simulatedData = Math.random() * 100; // Generar valor aleatorio entre 0 y 100
+                publisher.publish('Topic test', `Temperatura ${simulatedData.toString()} 2`);
+            }, 10000);
         });
+
     } catch (error) {
         logger.error('Error to publisher', error);
     }

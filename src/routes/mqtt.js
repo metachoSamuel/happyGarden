@@ -1,15 +1,16 @@
 /**
- * Mqtt Server route
+ * MQTT server route
  * @author metachoSamuel
  */
 
 const { Router } = require('express');
-const { startBroker } = require('../controllers/mqtt/broker');
-const { startPublisher } = require('../controllers/mqtt/publisher');
-const { startSubscriber } = require('../controllers/mqtt/subscriber');
+const authenticateUser = require('../utils/auth');
+const { activateMqttServer, stopMqttServer } = require('../controllers/mqtt/serverMqtt');
 
 const router = Router();
 
-router.post('/startAll', startBroker, startPublisher, startSubscriber);
+router.use(authenticateUser);
+router.get('/', activateMqttServer);
+router.get('/stop', stopMqttServer);
 
 module.exports = router;

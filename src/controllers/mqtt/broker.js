@@ -4,21 +4,33 @@
  */
 
 const mosca = require('mosca');
-const { clientConnected, publishedData } = require('../../utils/mqtt/handleMqtt');
 const logger = require('../../utils/logger');
+let broker;
+//const port = process.env.PORT_MOSCA || 4000;
 
-const port = process.env.PORT_MOSCA || 4000;
-const broker = new mosca.Server(port);
+const settings = {
+    port: parseInt(process.env.PORT_MOSCA) || 4000,
+};
 
+
+const handleClientConnected = (client) => {
+    logger.info('Client connected:', client.id);
+};
+
+const handlePublishedData = (packet, client) => {
+    if (!client) return;
+    logger.info('Message received', client.id, ':', packet.payload.toString());
+};
 /**
  * Start Broker from mosca server
  */
 const startBroker = () => {
     try {
-        broker.on('clientConnected', clientConnected);
-        broker.on('published', publishedData);
+        broker = new mosca.Server(settings);
+        broker.on('clientConnected', handleClientConnected);
+        broker.on('published', handlePublishedData);
         broker.on('ready', () => {
-            logger.info(`Server MQTT i´ts already on port ${port}}`);
+            logger.info(`Server MQTT i´ts already on port ${settings.port}`);
         });
     } catch (error) {
         logger.error(error);
