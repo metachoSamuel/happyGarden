@@ -21,7 +21,7 @@ const subscriber = mqtt.connect(`mqtt://localhost:${portMosca}`);
 const startSubscriber = () => {
     try {
         subscriber.on('connect', () => {
-            logger.info("Cliente MQTT conectado");
+            logger.info("Subscriber MQTT connected");
             subscriber.subscribe('Topic test');
         });
     } catch (error) {
@@ -59,10 +59,10 @@ const stopSub = () => {
     try {
         if (subscriber) {
             subscriber.end(() => {
-                logger.info('Subcriber MQTT detenido');
+                logger.info('Subscriber MQTT stop');
             });
         } else {
-            logger.info('El Subcriber MQTT no está en ejecución.');
+            logger.info('Subscriber MQTT already stopper');
         }
     } catch (error) {
         logger.error(error);
